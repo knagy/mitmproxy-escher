@@ -1,2 +1,3 @@
 escherauth-go>=0.1,<1.0
 pycodestyle
+mitmproxy
