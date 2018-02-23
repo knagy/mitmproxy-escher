@@ -24,7 +24,7 @@ setup(
     ],
     install_requires=[
         'escherauth-go>=0.1,<1.0',
-        'mitmproxy>=2.0.0',
+        'mitmproxy>=2.0,<3.0',
     ],
     zip_safe=True,
 )
