@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='mitmproxy-escher',
     description='Sign mitmproxy requests with Escher',
-    version='0.1.3',
+    version='1.0.0',
     url='https://github.com/knagy/mitmproxy-escher',
     author='Nagy Krisztián',
     author_email='knagy@deadlime.hu',
