@@ -31,5 +31,5 @@ dateHeaderName=X-EMS-Date
 ## Basic usage
 
 ```
-mitmproxy -s "$(python3 -m mitmproxy_escher) -c /path/to/config.ini"
+mitmproxy -s "$(python3 -m mitmproxy_escher)" --set escher_config=/path/to/config.ini
 ```
