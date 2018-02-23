@@ -22,12 +22,7 @@ class Config:
 
 
 class SignerFactory:
-    def __init__(self, config: Config):
-        self._config = config
-
-    def get_for_host(self, host):
-        config = self._config.get()
-
+    def get_for_host(self, config, host):
         for section in config.sections():
             if not fnmatch(host, section):
                 continue
@@ -39,11 +34,29 @@ class SignerFactory:
 
 
 class SignRequest:
-    def __init__(self, signer: SignerFactory):
-        self._signer = signer
+    def __init__(self, factory: SignerFactory):
+        self._factory = factory
+        self._config = None
+
+    def load(self, loader):
+        loader.add_option(
+            name='escher_config',
+            typespec=str,
+            default='',
+            help='path to escher config file'
+        )
+
+    def configure(self, updates):
+        if 'escher_config' not in updates or not ctx.options.escher_config:
+            return
+
+        self._config = Config(ctx.options.escher_config)
 
     def request(self, flow):
-        signer = self._signer.get_for_host(flow.request.pretty_host)
+        if not self._config:
+            return
+
+        signer = self._factory.get_for_host(self._config.get(), flow.request.pretty_host)
         if not signer:
             return
 
@@ -56,3 +69,8 @@ class SignRequest:
 
         for k, v in headers.items():
             flow.request.headers[k] = v
+
+
+addons = [
+    SignRequest(SignerFactory())
+]
