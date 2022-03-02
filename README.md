@@ -28,8 +28,16 @@ authHeaderName=X-EMS-Auth
 dateHeaderName=X-EMS-Date
 ```
 
-## Basic usage
+## Usage
+
+Start `mitmproxy` with the addon:
 
 ```
 mitmproxy -s "$(python3 -m mitmproxy_escher)" --set escher_config=/path/to/config.ini
+```
+
+Make requests through the proxy:
+
+```
+curl -k -x localhost:8080 https://httpbin.org/headers
 ```
