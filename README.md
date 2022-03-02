@@ -1,4 +1,4 @@
-# mitmproxy-escher [![Build Status](https://travis-ci.org/knagy/mitmproxy-escher.svg?branch=master)](https://travis-ci.org/knagy/mitmproxy-escher)
+# mitmproxy-escher
 
 Sign [mitmproxy](https://mitmproxy.org/) requests with [Escher](https://escherauth.io/).
 
