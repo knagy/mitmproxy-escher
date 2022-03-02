@@ -121,6 +121,20 @@ class TestSignRequest(TestCase):
         self.assertEqual('test1', flow.request.headers['X-Ems-Auth'])
         self.assertEqual('test2', flow.request.headers['X-Ems-Date'])
 
+    @patch('mitmproxy_escher.ctx')
+    def test_it_should_lowercase_extra_headers_for_http2_requests(self, ctx):
+        ctx.options.escher_config = '/path/to/config.ini'
+        self.signer.signRequest.return_value = {'X-Ems-Auth': 'test1', 'X-Ems-Date': 'test2'}
+
+        flow = self.get_flow()
+        flow.request.is_http2 = True
+
+        self.subject.configure({'escher_config'})
+        self.subject.request(flow)
+
+        self.assertEqual('test1', flow.request.headers['x-ems-auth'])
+        self.assertEqual('test2', flow.request.headers['x-ems-date'])
+
     def get_flow(self):
         flow = MagicMock()
         flow.request.method = 'POST'
@@ -129,5 +143,6 @@ class TestSignRequest(TestCase):
         flow.request.path = '/path'
         flow.request.text = 'body'
         flow.request.headers = {'Host': 'example.com'}
+        flow.request.is_http2 = False
 
         return flow

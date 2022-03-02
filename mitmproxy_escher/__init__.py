@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from escherauth_go.escher_signer import EscherSigner
 from fnmatch import fnmatch
-from mitmproxy import ctx
+from mitmproxy import ctx, http
 
 
 class Config:
@@ -52,7 +52,7 @@ class SignRequest:
 
         self._config = Config(ctx.options.escher_config)
 
-    def request(self, flow):
+    def request(self, flow: http.HTTPFlow) -> None:
         if not self._config:
             return
 
@@ -68,6 +68,8 @@ class SignRequest:
         )
 
         for k, v in headers.items():
+            if flow.request.is_http2:
+                k = k.lower()
             flow.request.headers[k] = v
 
 
