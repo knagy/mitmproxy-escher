@@ -1,9 +1,15 @@
 from setuptools import setup
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / 'README.md').read_text()
 
 setup(
     name='mitmproxy-escher',
     description='Sign mitmproxy requests with Escher',
-    version='2.0.1',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    version='2.0.2',
     url='https://github.com/knagy/mitmproxy-escher',
     author='Nagy Krisztián',
     author_email='knagy@deadlime.hu',
