@@ -9,7 +9,7 @@ setup(
     description='Sign mitmproxy requests with Escher',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    version='2.0.2',
+    version='3.0.0',
     url='https://github.com/knagy/mitmproxy-escher',
     author='Nagy Krisztián',
     author_email='knagy@deadlime.hu',
