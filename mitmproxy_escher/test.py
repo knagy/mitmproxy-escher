@@ -88,8 +88,9 @@ class TestSignRequest(TestCase):
 
         self.signer.signRequest.assert_not_called()
 
+    @patch('mitmproxy_escher.Config')
     @patch('mitmproxy_escher.ctx')
-    def test_it_does_nothing_if_no_signer_found(self, ctx):
+    def test_it_does_nothing_if_no_signer_found(self, ctx, Config):
         ctx.options.escher_config = '/path/to/config.ini'
 
         self.factory.get_for_host.return_value = None
@@ -99,8 +100,9 @@ class TestSignRequest(TestCase):
 
         self.signer.signRequest.assert_not_called()
 
+    @patch('mitmproxy_escher.Config')
     @patch('mitmproxy_escher.ctx')
-    def test_it_signs_the_request(self, ctx):
+    def test_it_signs_the_request(self, ctx, Config):
         ctx.options.escher_config = '/path/to/config.ini'
 
         self.subject.configure({'escher_config'})
@@ -108,8 +110,9 @@ class TestSignRequest(TestCase):
 
         self.signer.signRequest.assert_called_once_with('POST', '/path', 'body', {'Host': 'example.com'})
 
+    @patch('mitmproxy_escher.Config')
     @patch('mitmproxy_escher.ctx')
-    def test_it_adds_the_extra_headers_to_the_request(self, ctx):
+    def test_it_adds_the_extra_headers_to_the_request(self, ctx, Config):
         ctx.options.escher_config = '/path/to/config.ini'
         self.signer.signRequest.return_value = {'X-Ems-Auth': 'test1', 'X-Ems-Date': 'test2'}
 
@@ -121,8 +124,9 @@ class TestSignRequest(TestCase):
         self.assertEqual('test1', flow.request.headers['X-Ems-Auth'])
         self.assertEqual('test2', flow.request.headers['X-Ems-Date'])
 
+    @patch('mitmproxy_escher.Config')
     @patch('mitmproxy_escher.ctx')
-    def test_it_should_lowercase_extra_headers_for_http2_requests(self, ctx):
+    def test_it_should_lowercase_extra_headers_for_http2_requests(self, ctx, Config):
         ctx.options.escher_config = '/path/to/config.ini'
         self.signer.signRequest.return_value = {'X-Ems-Auth': 'test1', 'X-Ems-Date': 'test2'}
 

@@ -1,3 +1,4 @@
+import logging
 from configparser import ConfigParser
 from escherauth_go.escher_signer import EscherSigner
 from fnmatch import fnmatch
@@ -11,12 +12,11 @@ class Config:
     def get(self):
         config = ConfigParser()
         config.optionxform = str
-        files = config.read(self._config_file)
 
-        if files:
-            ctx.log.info('[Escher] Config file "{}" loaded'.format(self._config_file))
+        if config.read(self._config_file):
+            logging.info('[Escher] Config file "{}" loaded'.format(self._config_file))
         else:
-            ctx.log.error('[Escher] Could not load config file "{}"'.format(self._config_file))
+            logging.error('[Escher] Could not load config file "{}"'.format(self._config_file))
 
         return config
 
@@ -27,10 +27,10 @@ class SignerFactory:
             if not fnmatch(host, section):
                 continue
 
-            ctx.log.info('[Escher] found "{}" section for host "{}"'.format(section, host))
+            logging.info('[Escher] found "{}" section for host "{}"'.format(section, host))
             return EscherSigner(**config[section])
 
-        ctx.log.info('[Escher] no section found for host "{}"'.format(host))
+        logging.info('[Escher] no section found for host "{}"'.format(host))
 
 
 class SignRequest:
