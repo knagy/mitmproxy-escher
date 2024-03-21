@@ -1,6 +1,6 @@
 import logging
 from configparser import ConfigParser
-from escherauth_go.escher_signer import EscherSigner
+from escherauth import Escher
 from fnmatch import fnmatch
 from mitmproxy import ctx, http
 
@@ -28,7 +28,18 @@ class SignerFactory:
                 continue
 
             logging.info('[Escher] found "{}" section for host "{}"'.format(section, host))
-            return EscherSigner(**config[section])
+            return Escher(
+                config[section]['apiKey'],
+                config[section]['apiSecret'],
+                config[section]['credentialScope'],
+                {
+                    'hash_algo': config[section].get('hashAlgo', 'SHA256'),
+                    'algo_prefix': config[section].get('algoPrefix', 'EMS'),
+                    'vendor_key': config[section].get('vendorKey', 'EMS'),
+                    'auth_header_name': config[section].get('authHeaderName', 'X-EMS-Auth'),
+                    'date_header_name': config[section].get('dateHeaderName', 'X-EMS-Date'),
+                }
+            )
 
         logging.info('[Escher] no section found for host "{}"'.format(host))
 
@@ -60,14 +71,14 @@ class SignRequest:
         if not signer:
             return
 
-        headers = signer.signRequest(
-            flow.request.method,
-            flow.request.path,
-            flow.request.text,
-            {'Host': flow.request.host_header}
-        )
+        signed_request = signer.sign_request({
+            'method': flow.request.method,
+            'url': flow.request.path,
+            'host': flow.request.host_header,
+            'body': flow.request.text,
+        })
 
-        for k, v in headers.items():
+        for k, v in signed_request['headers']:
             if flow.request.is_http2:
                 k = k.lower()
             flow.request.headers[k] = v
