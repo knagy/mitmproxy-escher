@@ -30,7 +30,7 @@ setup(
     ],
     install_requires=[
         'escherauth>=1.0.3,<2.0',
-        'mitmproxy>=9.0.0,<11.0.0',
+        'mitmproxy>=9.0.0,<12.0.0',
     ],
     zip_safe=True,
 )
